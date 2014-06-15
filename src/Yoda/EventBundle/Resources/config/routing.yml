@@ -1,0 +1,8 @@
+#event_homepage:
+#    path:  /hello/{name}/{count}
+#    defaults: { _controller: EventBundle:Default:index, count: 1 }
+
+EventBundle_event_annotation:
+    resource: "@EventBundle/Controller"
+    prefix:   /
+    type:     annotation

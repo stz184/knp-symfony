@@ -1,0 +1,43 @@
+{% extends 'EventBundle::layout.html.twig' %}
+
+{% block body %}
+    <section class="event-show event-edit">
+        <header id="menu">
+            <a class="link" href="{{ path('event') }}">&larr; back to the event list</a>
+            <a class="link" href="{{ path('event_show', {'id': entity.id}) }}">show event</a>
+        </header>
+
+        <article>
+            <header class="map-container">
+                <img src="http://maps.googleapis.com/maps/api/staticmap?center={{ entity.location | url_encode }}&markers=color:red%7Ccolor:red%7C{{ entity.location | url_encode }}&zoom=14&size=300x300&maptype=roadmap&sensor=false" />
+            </header>
+            <section>
+                <form action="{{ path('event_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }}>
+                    <input type="hidden" name="_method" value="PUT">
+                    <h1>
+                        {{ form_widget(edit_form.name) }}
+                    </h1>
+
+                    <dl>
+                        <dt>where:</dt>
+                        <dd>{{ form_widget(edit_form.location) }}</dd>
+
+                        <dt>when:</dt>
+                        <dd>{{ form_widget(edit_form.time) }}</dd>
+
+                        <dt>what:</dt>
+                        <dd>
+                            {{ form_widget(edit_form.details) }}
+                        </dd>
+                    </dl>
+
+                    {{ form_widget(edit_form) }}
+
+                    <button type="submit" class="button">Save</button>
+
+                </form>
+
+            </section>
+        </article>
+    </section>
+{% endblock %}
