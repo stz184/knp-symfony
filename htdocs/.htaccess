@@ -51,3 +51,5 @@ DirectoryIndex app_dev.php
         # RedirectTemp cannot be used instead
     </IfModule>
 </IfModule>
+
+php_value error_log /var/log/apache2/%{ENV:SUBDOMAIN}.error.log

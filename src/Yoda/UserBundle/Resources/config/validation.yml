@@ -1,0 +1,4 @@
+#Yoda\UserBundle\Entity\User:
+#  properties:
+#    username:
+#      - NotBlank: ~

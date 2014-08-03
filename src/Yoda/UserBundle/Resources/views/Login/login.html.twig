@@ -1,0 +1,35 @@
+{% extends '::base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('bundles/user/css/login.css') }}" />
+{% endblock %}
+
+{% block body %}
+<section class="login">
+    <article>
+        {% if error %}
+            <div class="error">{{ error.message|trans }}</div>
+        {% endif %}
+
+
+        <form action="{{ path('login_check') }}" method="post">
+            <label for="username">Username:</label>
+            <input type="text" name="_username" id="username" value="{{ last_username }}">
+
+            <br />
+
+            <label for="password">Password:</label>
+            <input type="password" name="_password" id="password">
+
+            <br />
+
+            <label for="_remember_me">Remember me</label>
+            <input type="checkbox" name="_remember_me" id="_remember_me">
+
+            <button type="submit">login</button>
+        </form>
+    </article>
+</section>
+
+{% endblock %}
