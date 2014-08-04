@@ -1,14 +1,16 @@
 <?php
 namespace Yoda\UserBundle\DataFixtures\ORM;
 
+use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\FixtureInterface;
+use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Yoda\UserBundle\Entity\User;
 
 
-class  LoadUsers implements FixtureInterface, ContainerAwareInterface {
+class  LoadUsers extends AbstractFixture implements FixtureInterface, ContainerAwareInterface, OrderedFixtureInterface {
 	/** @var  ContainerInterface */
 	private $container;
 
@@ -21,6 +23,7 @@ class  LoadUsers implements FixtureInterface, ContainerAwareInterface {
 			'fazomera'  => 'fazomera2004@yahoos.com'
 		);
 
+		$iUser = 0;
 		foreach ($names as $name => $email) {
 			$user = new User();
 			$user->setUsername($name);
@@ -30,6 +33,9 @@ class  LoadUsers implements FixtureInterface, ContainerAwareInterface {
 
 			$manager->persist($user);
 			$manager->flush();
+
+			$this->addReference('user-'.$iUser, $user);
+			$iUser++;
 		}
 	}
 
@@ -42,5 +48,15 @@ class  LoadUsers implements FixtureInterface, ContainerAwareInterface {
 	public function setContainer(ContainerInterface $container = null)
 	{
 		$this->container = $container;
+	}
+
+	/**
+	 * Get the order of this fixture
+	 *
+	 * @return integer
+	 */
+	function getOrder()
+	{
+		return 10;
 	}
 }

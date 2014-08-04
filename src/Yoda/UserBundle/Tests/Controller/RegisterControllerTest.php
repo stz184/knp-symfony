@@ -13,7 +13,7 @@ class RegisterControllerTest extends WebTestCase
 
 	protected function setUp()
 	{
-		self::runCommand('doctrine:fixtures:load --env=test --purge-with-truncate --no-interaction');
+		self::runCommand('doctrine:fixtures:load --env=test --no-interaction');
 	}
 
 
