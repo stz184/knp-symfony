@@ -3,7 +3,6 @@
 namespace Yoda\EventBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
@@ -239,20 +238,4 @@ class EventController extends Controller
             ->getForm()
         ;
     }
-
-	/**
-	 * Check is the currently logged in user has access rights to perform
-	 * action on specific Event object
-	 *
-	 * @param Event $event
-	 * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
-	 */
-	private function enforceOwnerSecurity(Event $event)
-	{
-		// keep in mind, this will call all registered security voters
-		if (false === $this->get('security.context')->isGranted('edit', $event)) {
-			throw $this->createAccessDeniedException('Unauthorised access by EventVoter!');
-		}
-
-	}
 }

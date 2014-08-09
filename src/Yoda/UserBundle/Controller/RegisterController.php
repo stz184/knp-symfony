@@ -2,7 +2,7 @@
 namespace Yoda\UserBundle\Controller;
 
 use Doctrine\Common\Persistence\ObjectManager;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Yoda\EventBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -70,6 +70,6 @@ class RegisterController extends Controller
 	private function authenticateUser(User $user)
 	{
 		$token = new UsernamePasswordToken($user, null, $this->providerKey, $user->getRoles());
-		$this->container->get('security.context')->setToken($token);
+		$this->getSecurityContext()->setToken($token);
 	}
 }
