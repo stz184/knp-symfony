@@ -31,11 +31,13 @@
                         </dd>
                     </dl>
 
-                    {{ form_widget(edit_form) }}
-
-                    <button type="submit" class="button">Save</button>
+                    {{ form_rest(edit_form) }}
 
                 </form>
+
+                {{ form_start(delete_form) }}
+                {{ form_widget(delete_form) }}
+                {{ form_end(delete_form) }}
 
             </section>
         </article>

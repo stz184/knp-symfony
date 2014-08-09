@@ -9,6 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 use Yoda\EventBundle\Entity\Event;
 use Yoda\EventBundle\Form\EventType;
+use Yoda\UserBundle\Entity\User;
 
 /**
  * Event controller.
@@ -127,6 +128,8 @@ class EventController extends Controller
             throw $this->createNotFoundException('Unable to find Event entity.');
         }
 
+		$this->enforceOwnerSecurity($entity);
+
         $editForm = $this->createEditForm($entity);
         $deleteForm = $this->createDeleteForm($id);
 
@@ -151,7 +154,12 @@ class EventController extends Controller
             'method' => 'PUT',
         ));
 
-        $form->add('submit', 'submit', array('label' => 'Update'));
+        $form->add('submit', 'submit', array(
+			'label' => 'Update',
+			'attr'	=> array(
+				'class'	=> 'button'
+			)
+		));
 
         return $form;
     }
@@ -168,6 +176,8 @@ class EventController extends Controller
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Event entity.');
         }
+
+		$this->enforceOwnerSecurity($entity);
 
         $deleteForm = $this->createDeleteForm($id);
         $editForm = $this->createEditForm($entity);
@@ -202,6 +212,8 @@ class EventController extends Controller
                 throw $this->createNotFoundException('Unable to find Event entity.');
             }
 
+			$this->enforceOwnerSecurity($entity);
+
             $em->remove($entity);
             $em->flush();
         }
@@ -221,8 +233,28 @@ class EventController extends Controller
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('event_delete', array('id' => $id)))
             ->setMethod('DELETE')
-            ->add('submit', 'submit', array('label' => 'Delete'))
+            ->add('submit', 'submit', array('label' => 'Delete', 'attr' => array(
+				'class' => 'button'
+			)))
             ->getForm()
         ;
     }
+
+	/**
+	 * Check is the currently logged in user has access rights to perform
+	 * action on specific Event object
+	 *
+	 * @param Event $event
+	 * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
+	 */
+	private function enforceOwnerSecurity(Event $event)
+	{
+		$user = $this->getUser();
+		if (
+			false == ($user instanceof User)
+			|| $user->getId() != $event->getOwner()->getId()
+		) {
+			throw $this->createAccessDeniedException('Access denied');
+		}
+	}
 }

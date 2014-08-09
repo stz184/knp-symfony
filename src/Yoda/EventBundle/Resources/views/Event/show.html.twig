@@ -14,7 +14,9 @@
             <section>
                 <h1>
                     {{ entity.name }}
+                    {% if is_granted('IS_AUTHENTICATED_REMEMBERED') AND app.user.id == entity.owner.id %}
                     <a class="button" href="{{ path('event_edit', {'id': entity.id}) }}">edit</a>
+                    {% endif %}
                 </h1>
 
                 <dl>
