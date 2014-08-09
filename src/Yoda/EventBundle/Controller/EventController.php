@@ -249,12 +249,10 @@ class EventController extends Controller
 	 */
 	private function enforceOwnerSecurity(Event $event)
 	{
-		$user = $this->getUser();
-		if (
-			false == ($user instanceof User)
-			|| $user->getId() != $event->getOwner()->getId()
-		) {
-			throw $this->createAccessDeniedException('Access denied');
+		// keep in mind, this will call all registered security voters
+		if (false === $this->get('security.context')->isGranted('edit', $event)) {
+			throw $this->createAccessDeniedException('Unauthorised access by EventVoter!');
 		}
+
 	}
 }
