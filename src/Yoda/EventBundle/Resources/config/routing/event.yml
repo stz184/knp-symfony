@@ -3,7 +3,7 @@ event:
     defaults: { _controller: "EventBundle:Event:index" }
 
 event_show:
-    pattern:  /{id}/show
+    pattern:  /{slug}/show
     defaults: { _controller: "EventBundle:Event:show" }
 
 event_new:

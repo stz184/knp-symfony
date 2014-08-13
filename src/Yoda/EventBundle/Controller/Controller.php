@@ -8,6 +8,7 @@
 
 namespace Yoda\EventBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller as BaseController;
+use Yoda\EventBundle\Entity\Event as EventEntity;
 
 class Controller extends BaseController {
 
@@ -23,10 +24,10 @@ class Controller extends BaseController {
 	 * Check is the currently logged in user has access rights to perform
 	 * action on specific Event object
 	 *
-	 * @param Event $event
+	 * @param \Yoda\EventBundle\Entity\Event $event
 	 * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
 	 */
-	private function enforceOwnerSecurity(Event $event)
+	protected function enforceOwnerSecurity(EventEntity $event)
 	{
 		// keep in mind, this will call all registered security voters
 		if (false === $this->get('security.context')->isGranted('edit', $event)) {

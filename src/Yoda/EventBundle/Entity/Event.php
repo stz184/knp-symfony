@@ -5,6 +5,7 @@ namespace Yoda\EventBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Yoda\UserBundle\Entity\User;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Event
@@ -30,6 +31,14 @@ class Event
      */
     private $name;
 
+	/**
+	 * @var string
+	 *
+	 * @ORM\Column(name="slug", type="string", length=255, unique=true)
+	 * @Gedmo\Slug(fields={"name"}, updatable=false)
+	 */
+	private $slug;
+
     /**
      * @var \DateTime
      *
@@ -54,9 +63,26 @@ class Event
 	/**
 	 * @var User
 	 *
-	 * @ORM\ManyToOne(targetEntity="Yoda\UserBundle\Entity\User")
+	 * @ORM\ManyToOne(targetEntity="Yoda\UserBundle\Entity\User", inversedBy="events")
+	 * @ORM\JoinColumn(onDelete="CASCADE")
 	 */
 	protected $owner;
+
+	/**
+	 * @var \DateTime
+	 *
+	 * @ORM\Column(type="datetime")
+	 * @Gedmo\Timestampable(on="create")
+	 */
+	protected $createdAd;
+
+	/**
+	 * @var \DateTime
+	 *
+	 * @ORM\Column(type="datetime")
+	 * @Gedmo\Timestampable(on="update")
+	 */
+	protected $updatedAd;
 
     /**
      * Get id
@@ -174,5 +200,37 @@ class Event
 	public function setOwner(User $owner)
 	{
 		$this->owner = $owner;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getSlug()
+	{
+		return $this->slug;
+	}
+
+	/**
+	 * @param string $slug
+	 */
+	public function setSlug($slug)
+	{
+		$this->slug = $slug;
+	}
+
+	/**
+	 * @return \DateTime
+	 */
+	public function getCreatedAd()
+	{
+		return $this->createdAd;
+	}
+
+	/**
+	 * @return \DateTime
+	 */
+	public function getUpdatedAd()
+	{
+		return $this->updatedAd;
 	}
 }

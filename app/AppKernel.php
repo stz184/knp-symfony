@@ -19,6 +19,7 @@ class AppKernel extends Kernel
             new Yoda\EventBundle\EventBundle(),
             new Yoda\UserBundle\UserBundle(),
 			new Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle(),
+			new \Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle()
 		);
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

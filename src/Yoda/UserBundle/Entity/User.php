@@ -2,6 +2,7 @@
 
 namespace Yoda\UserBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -74,6 +75,23 @@ class User implements AdvancedUserInterface, \Serializable
      */
     private $roles = array();
 
+	/**
+	 * @ORM\OneToMany(
+	 *		targetEntity="Yoda\EventBundle\Entity\Event",
+	 * 		mappedBy="owner"
+	 * )
+	 * @var ArrayCollection
+	 */
+	private $events;
+
+	/**
+	 * @return \Doctrine\Common\Collections\ArrayCollection
+	 */
+	public function getEvents()
+	{
+		return $this->events;
+	}
+
     /**
      * @var bool
      * @ORM\Column(type="boolean")
@@ -83,6 +101,7 @@ class User implements AdvancedUserInterface, \Serializable
 	public function __construct()
 	{
 		$this->salt = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
+		$this->events = new ArrayCollection();
 	}
 
     /**
