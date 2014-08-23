@@ -8,6 +8,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 use Yoda\EventBundle\Entity\Event;
+use Yoda\EventBundle\Entity\EventRepository;
 use Yoda\EventBundle\Form\EventType;
 use Yoda\UserBundle\Entity\User;
 
@@ -27,7 +28,9 @@ class EventController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('EventBundle:Event')->findAll();
+		/** @var EventRepository $eventRepo */
+        $eventRepo 	= $em->getRepository('EventBundle:Event');
+		$entities 	= $eventRepo->getUpcomingEvents();
 
         return array(
             'entities' => $entities,
