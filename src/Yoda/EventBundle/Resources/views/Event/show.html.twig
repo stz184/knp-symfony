@@ -31,9 +31,29 @@
 
                     <dt>who:</dt>
                     <dd>
+                        {{ entity.attendees|length }} attending!
+                        <br style="clear: both" />
+
                         <ul class="users">
+                            {% for attendee in entity.attendees %}
+                            <li>
+                                {{ attendee }}
+                            </li>
+                            {% else %}
                             <li>nobody yet!</li>
+                            {% endfor %}
                         </ul>
+
+                        <br style="clear: both" />
+                        {% if entity.hasAttendee(app.user) %}
+                            <a href="{{ path('unattend_event', {'id' : entity.id }) }}" class="button">
+                                Oh no! I can't go anymore!
+                            </a>
+                        {% else %}
+                        <a href="{{ path('attend_event', {'id' : entity.id }) }}" class="button">
+                            I totally want to go!
+                        </a>
+                        {% endif %}
                     </dd>
                 </dl>
             </section>

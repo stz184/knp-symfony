@@ -2,8 +2,8 @@
 
 namespace Yoda\EventBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Mapping\ManyToOne;
 use Yoda\UserBundle\Entity\User;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -84,7 +84,26 @@ class Event
 	 */
 	protected $updatedAd;
 
-    /**
+	/**
+	 * @var \Doctrine\Common\Collections\ArrayCollection
+	 * @ORM\ManyToMany(targetEntity="Yoda\UserBundle\Entity\User")
+	 */
+	protected $attendees;
+
+	/**
+	 * @return \Doctrine\Common\Collections\ArrayCollection
+	 */
+	public function getAttendees()
+	{
+		return $this->attendees;
+	}
+
+	function __construct()
+	{
+		$this->attendees = new ArrayCollection();
+	}
+
+	/**
      * Get id
      *
      * @return integer 
@@ -232,5 +251,10 @@ class Event
 	public function getUpdatedAd()
 	{
 		return $this->updatedAd;
+	}
+
+	public function hasAttendee(User $user)
+	{
+		return $this->attendees->contains($user);
 	}
 }

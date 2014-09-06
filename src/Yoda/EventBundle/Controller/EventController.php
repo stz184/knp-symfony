@@ -10,7 +10,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Yoda\EventBundle\Entity\Event;
 use Yoda\EventBundle\Entity\EventRepository;
 use Yoda\EventBundle\Form\EventType;
-use Yoda\UserBundle\Entity\User;
 
 /**
  * Event controller.
@@ -249,4 +248,62 @@ class EventController extends Controller
             ->getForm()
         ;
     }
+
+	/**
+	 * @param $id
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
+	 * @Route("{id}/attend", name="attend_event", requirements={"id" : "\d+"})
+	 * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+	 */
+	public function attendAction($id)
+	{
+		$enityManager = $this->getDoctrine()->getManager();
+		/** @var Event $event */
+		$event = $enityManager->getRepository('EventBundle:Event')->find($id);
+
+		if (!$event) {
+			throw $this->createNotFoundException(sprintf('No event found for ID %d', $id));
+		}
+
+		if (!$event->hasAttendee($this->getUser())) {
+			$event->getAttendees()->add($this->getUser());
+			$enityManager->persist($event);
+			$enityManager->flush();
+		}
+
+		$url = $this->generateUrl('event_show', array(
+			'slug'	=> $event->getSlug()
+		));
+
+		return $this->redirect($url);
+	}
+
+	/**
+	 * @param $id
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
+	 * @Route("{id}/unattend", name="unattend_event", requirements={"id" : "\d+"})
+	 * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+	 */
+	public function unattendAction($id)
+	{
+		$enityManager = $this->getDoctrine()->getManager();
+		/** @var Event $event */
+		$event = $enityManager->getRepository('EventBundle:Event')->find($id);
+
+		if (!$event) {
+			throw $this->createNotFoundException(sprintf('No event found for ID %d', $id));
+		}
+
+		if ($event->hasAttendee($this->getUser())) {
+			$event->getAttendees()->removeElement($this->getUser());
+			$enityManager->persist($event);
+			$enityManager->flush();
+		}
+
+		$url = $this->generateUrl('event_show', array(
+			'slug'	=> $event->getSlug()
+		));
+
+		return $this->redirect($url);
+	}
 }
