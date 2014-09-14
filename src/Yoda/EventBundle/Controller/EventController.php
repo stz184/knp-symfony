@@ -3,6 +3,7 @@
 namespace Yoda\EventBundle\Controller;
 
 use Doctrine\Common\Persistence\ObjectManager;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -250,12 +251,13 @@ class EventController extends Controller
     }
 
 	/**
-	 * @param $id
-	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
-	 * @Route("{id}/attend", name="attend_event", requirements={"id" : "\d+"})
+	 * @param integer $id
+	 * @param string $format
 	 * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
+	 * @Route("{id}/attend.{format}", name="attend_event", requirements={"id" : "\d+", "format" : "json"}, defaults={"format" : "html"})
 	 */
-	public function attendAction($id)
+	public function attendAction($id, $format)
 	{
 		$enityManager = $this->getDoctrine()->getManager();
 		/** @var Event $event */
@@ -271,6 +273,12 @@ class EventController extends Controller
 			$enityManager->flush();
 		}
 
+		if ($format == 'json') {
+			return new JsonResponse(array(
+				'attending' => true
+			));
+		}
+
 		$url = $this->generateUrl('event_show', array(
 			'slug'	=> $event->getSlug()
 		));
@@ -281,7 +289,7 @@ class EventController extends Controller
 	/**
 	 * @param $id
 	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
-	 * @Route("{id}/unattend", name="unattend_event", requirements={"id" : "\d+"})
+	 * @Route("{id}/unattend.{format}", name="unattend_event", requirements={"id" : "\d+", "format" : "json"}, defaults={"format" : "html"})
 	 * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
 	 */
 	public function unattendAction($id)

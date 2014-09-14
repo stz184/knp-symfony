@@ -1,5 +1,10 @@
 {% extends 'EventBundle::layout.html.twig' %}
 
+{% block javascript %}
+    {{ parent() }}
+    <script type="application/javascript" src="{{ asset('bundles/event/js/show.js') }}"></script>
+{% endblock %}
+
 {% block body %}
 
     <section class="event-show">
@@ -46,11 +51,11 @@
 
                         <br style="clear: both" />
                         {% if entity.hasAttendee(app.user) %}
-                            <a href="{{ path('unattend_event', {'id' : entity.id }) }}" class="button">
+                            <a href="{{ path('unattend_event', {'id' : entity.id }) }}" class="button js-attend-toggle">
                                 Oh no! I can't go anymore!
                             </a>
                         {% else %}
-                        <a href="{{ path('attend_event', {'id' : entity.id }) }}" class="button">
+                        <a href="{{ path('attend_event', {'id' : entity.id }) }}" class="button js-attend-toggle">
                             I totally want to go!
                         </a>
                         {% endif %}
