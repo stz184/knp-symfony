@@ -12,12 +12,25 @@ use Doctrine\ORM\EntityRepository;
  */
 class EventRepository extends EntityRepository
 {
-	public function getUpcomingEvents()
+	public function getUpcomingEvents($max = null)
 	{
-		return $this->createQueryBuilder('e')
+		$qb = $this->createQueryBuilder('e')
 			->addOrderBy('e.time', 'ASC')
 			->andWhere('e.time > :now')
-			->setParameter('now', new \DateTime())
+			->setParameter('now', new \DateTime());
+
+		if ($max) {
+			$qb->setMaxResults($max);
+		}
+
+		return $qb->getQuery()->execute();
+	}
+
+	public function getRecentlyUpdatedEvents()
+	{
+		return $this->createQueryBuilder('e')
+			->andWhere('e.updatedAt > :since')
+			->setParameter('since', new \DateTime('24 hours ago'))
 			->getQuery()
 			->execute();
 	}

@@ -314,4 +314,14 @@ class EventController extends Controller
 
 		return $this->redirect($url);
 	}
+
+	public function _upcomingEventsAction($max = null)
+	{
+		$em = $this->getDoctrine()->getManager();
+		$events = $em->getRepository('EventBundle:Event')->getUpcomingEvents($max);
+
+		return $this->render('EventBundle:Event:_upcomingEvents.html.twig', array(
+			'events' => $events
+		));
+	}
 }
